@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace FunWithLinqExpressions
 {
@@ -20,6 +21,14 @@ namespace FunWithLinqExpressions
             };
 
             Console.ReadLine();
+        }
+
+        static void SelectEverything(ProductInfo[] products)
+        {
+            Console.WriteLine("All product details:");
+            var allProducts = from p in products select p;
+            foreach (var prod in allProducts)
+                Console.WriteLine(prod.ToString());
         }
     }
 }
