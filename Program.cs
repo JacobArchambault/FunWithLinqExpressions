@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FunWithLinqExpressions
@@ -30,7 +31,13 @@ namespace FunWithLinqExpressions
                 Console.WriteLine(o);
 
             GetCountFromQuery();
-
+            ReverseEverything(itemsInStock);
+            AlphabetizeProductNames(itemsInStock);
+            DisplayDiff();
+            DisplayIntersection();
+            DisplayUnion();
+            DisplayConcat();
+            DisplayConcatNoDups();
             Console.ReadLine();
         }
 
@@ -41,7 +48,6 @@ namespace FunWithLinqExpressions
             foreach (var prod in allProducts)
                 Console.WriteLine(prod.ToString());
         }
-
         static void ListProductNames(ProductInfo[] products)
         {
             // Now get only the names of the products.
@@ -51,7 +57,6 @@ namespace FunWithLinqExpressions
             foreach (var n in names)
                 Console.WriteLine($"Name: {n}");
         }
-
         static void GetOverstock(ProductInfo[] products)
         {
             Console.WriteLine("The overstock items:");
@@ -61,7 +66,6 @@ namespace FunWithLinqExpressions
             foreach (ProductInfo c in overstock)
                 Console.WriteLine(c.ToString());
         }
-
         static void GetNamesAndDescriptions(ProductInfo[] products)
         {
             Console.WriteLine("Names and Descriptions:");
@@ -70,14 +74,12 @@ namespace FunWithLinqExpressions
             foreach (var item in nameDesc)
                 Console.WriteLine(item.ToString());
         }
-
         static Array GetProjectedSubset(ProductInfo[] products)
         {
             var nameDesc = from p in products select new { p.Name, p.Description };
             // Map set of anonymous objects to an Array object.
             return nameDesc.ToArray();
         }
-
         static void GetCountFromQuery()
         {
             string[] currentVideoGames = { "Morrowind", "Uncharted 2", "Fallout 3", "Daxter", "System Shock 2" };
@@ -88,5 +90,81 @@ namespace FunWithLinqExpressions
             // Print out the number of items.
             Console.WriteLine("{0} items honor LINQ query.", numb);
         }
+        static void ReverseEverything(ProductInfo[] products)
+        {
+            Console.WriteLine("Products in reverse:");
+            var allProducts = from p in products select p;
+            foreach (var prod in allProducts.Reverse())
+                Console.WriteLine(prod.ToString());
+        }
+        static void AlphabetizeProductNames(ProductInfo[] products)
+        {
+            // Get names of products, alphabetized.
+            var subset = from p in products orderby p.Name select p;
+
+            Console.WriteLine("Ordered by Name:");
+            foreach (var p in subset)
+                Console.WriteLine(p.ToString());
+        }
+        static void DisplayDiff()
+        {
+            List<string> myCars = new List<string> { "Yugo", "Aztec", "BMW" };
+            List<string> yourCars = new List<string> { "BMW", "Saab", "Aztec" };
+
+            var carDiff = (from c in myCars select c).Except(from c2 in yourCars select c2);
+
+            Console.WriteLine("Here is what I have but you don't");
+            foreach(string s in carDiff)
+                Console.WriteLine(s); // Prints Yugo
+        }
+        static void DisplayIntersection()
+        {
+            List<string> myCars = new List<string> { "Yugo", "Aztec", "BMW" };
+            List<string> yourCars = new List<string> { "BMW", "Saab", "Aztec" };
+
+            // Get common members.
+            var carIntersect = (from c in myCars select c).Intersect(from c2 in yourCars select c2);
+
+            Console.WriteLine("Here is what we have in common");
+            foreach (string s in carIntersect)
+                Console.WriteLine(s); // Prints Aztec and BMW
+        }
+        static void DisplayUnion()
+        {
+            List<string> myCars = new List<string> { "Yugo", "Aztec", "BMW" };
+            List<string> yourCars = new List<string> { "BMW", "Saab", "Aztec" };
+
+            // Get common members.
+            var carUnion = (from c in myCars select c).Union(from c2 in yourCars select c2);
+
+            Console.WriteLine("Here is everything:");
+            foreach (string s in carUnion)
+                Console.WriteLine(s); // Prints Aztec and BMW
+        }
+        static void DisplayConcat()
+        {
+            List<string> myCars = new List<string> { "Yugo", "Aztec", "BMW" };
+            List<string> yourCars = new List<string> { "BMW", "Saab", "Aztec" };
+
+            // Get common members.
+            var carConcat = (from c in myCars select c).Concat(from c2 in yourCars select c2);
+
+            Console.WriteLine("Here is our list of cars concatenated");
+            foreach (string s in carConcat)
+                Console.WriteLine(s); // Prints Aztec and BMW
+        }
+        static void DisplayConcatNoDups()
+        {
+            List<string> myCars = new List<string> { "Yugo", "Aztec", "BMW" };
+            List<string> yourCars = new List<string> { "BMW", "Saab", "Aztec" };
+
+            // Get common members.
+            var carConcat = (from c in myCars select c).Concat(from c2 in yourCars select c2);
+
+            Console.WriteLine("Here is our list of cars concatenated with duplicates removed:");
+            foreach (string s in carConcat.Distinct())
+                Console.WriteLine(s); // Prints Aztec and BMW
+        }
+
     }
 }
