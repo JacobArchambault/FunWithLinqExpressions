@@ -19,9 +19,18 @@ namespace FunWithLinqExpressions
                 new ProductInfo{Name = "RipOff Water", Description = "From the tap to your wallet", NumberInStock = 100 },
                 new ProductInfo{Name = "Classic Valpo Pizza", Description = "Everyone loves pizza!", NumberInStock = 73 },
             };
+
             SelectEverything(itemsInStock);
             ListProductNames(itemsInStock);
             GetOverstock(itemsInStock);
+            GetNamesAndDescriptions(itemsInStock);
+
+            Array objs = GetProjectedSubset(itemsInStock);
+            foreach (object o in objs)
+                Console.WriteLine(o);
+
+            GetCountFromQuery();
+
             Console.ReadLine();
         }
 
@@ -51,6 +60,33 @@ namespace FunWithLinqExpressions
             var overstock = from p in products where p.NumberInStock > 25 select p;
             foreach (ProductInfo c in overstock)
                 Console.WriteLine(c.ToString());
+        }
+
+        static void GetNamesAndDescriptions(ProductInfo[] products)
+        {
+            Console.WriteLine("Names and Descriptions:");
+            var nameDesc = from p in products select new { p.Name, p.Description };
+
+            foreach (var item in nameDesc)
+                Console.WriteLine(item.ToString());
+        }
+
+        static Array GetProjectedSubset(ProductInfo[] products)
+        {
+            var nameDesc = from p in products select new { p.Name, p.Description };
+            // Map set of anonymous objects to an Array object.
+            return nameDesc.ToArray();
+        }
+
+        static void GetCountFromQuery()
+        {
+            string[] currentVideoGames = { "Morrowind", "Uncharted 2", "Fallout 3", "Daxter", "System Shock 2" };
+
+            // Get count from the query.
+            int numb = (from g in currentVideoGames where g.Length > 6 select g).Count();
+
+            // Print out the number of items.
+            Console.WriteLine("{0} items honor LINQ query.", numb);
         }
     }
 }
