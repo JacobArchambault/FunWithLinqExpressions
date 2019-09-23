@@ -20,24 +20,39 @@ namespace FunWithLinqExpressions
                 new ProductInfo{Name = "RipOff Water", Description = "From the tap to your wallet", NumberInStock = 100 },
                 new ProductInfo{Name = "Classic Valpo Pizza", Description = "Everyone loves pizza!", NumberInStock = 73 },
             };
-
+            // The Simplest LINQ query.
             SelectEverything(itemsInStock);
+
+            // Queries for only select fields.
             ListProductNames(itemsInStock);
-            GetOverstock(itemsInStock);
             GetNamesAndDescriptions(itemsInStock);
 
+            // Query with a where clause
+            GetOverstock(itemsInStock);
+
+            // Query making use of conversion to array.
             Array objs = GetProjectedSubset(itemsInStock);
             foreach (object o in objs)
                 Console.WriteLine(o);
+            
 
-            GetCountFromQuery();
+            // Queries involving ordering:
             ReverseEverything(itemsInStock);
             AlphabetizeProductNames(itemsInStock);
+
+            // Venn diagram operations.
             DisplayDiff();
             DisplayIntersection();
             DisplayUnion();
+
+            // Concatenations.
             DisplayConcat();
             DisplayConcatNoDups();
+
+            // Aggregation operations.
+            GetCountFromQuery();
+            AggregateOps();
+
             Console.ReadLine();
         }
 
@@ -165,6 +180,15 @@ namespace FunWithLinqExpressions
             foreach (string s in carConcat.Distinct())
                 Console.WriteLine(s); // Prints Aztec and BMW
         }
+        static void AggregateOps()
+        {
+            double[] winterTemps = { 2.0, -21.3, 8, -4, 0, 8.2 };
 
+            // Various aggregation examples.
+            Console.WriteLine("Max temp: {0}", (from t in winterTemps select t).Max());
+            Console.WriteLine("Min temp: {0}", (from t in winterTemps select t).Min());
+            Console.WriteLine("Average temp: {0}", (from t in winterTemps select t).Average());
+            Console.WriteLine("Sum of all temps: {0}", (from t in winterTemps select t).Sum());
+        }
     }
 }
